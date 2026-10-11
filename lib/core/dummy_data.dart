@@ -1,24 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Product {
-  final String id;
-  final String name;
-  final String description;
-  final double price;
-  final String imageUrl;
-  final List<Color> colors;
-  final List<String> sizes;
-
-  Product({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.imageUrl,
-    required this.colors,
-    required this.sizes,
-  });
-}
+import 'models/product.dart';
+import 'models/user_profile.dart';
 
 final dummyProducts = [
   Product(
@@ -87,18 +70,6 @@ final dummyCart = [
     selectedSize: 'One Size',
   ),
 ];
-
-class UserProfile {
-  final String name;
-  final String email;
-  final String profilePictureUrl;
-
-  UserProfile({
-    required this.name,
-    required this.email,
-    required this.profilePictureUrl,
-  });
-}
 
 final dummyUser = UserProfile(
   name: 'John Doe',

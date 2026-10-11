@@ -1,4 +1,4 @@
-# ecommerce_app_huma_volve
+# huma
 
 A new Flutter project.
 
