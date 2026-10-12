@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../../../dummy_data.dart';
+import '../../../models/cart_item.dart';
 import '../../../theme.dart';
 
 
 class CartItemCard extends StatelessWidget {
-  final CartItem cartItem;
 
-  const CartItemCard({super.key, required this.cartItem});
+
+  final CartItem cartItem;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
+
+  const CartItemCard({
+    super.key,
+    required this.cartItem,
+    required this.onIncrement,
+    required this.onDecrement,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'models/cart_item.dart';
 import 'models/product.dart';
 import 'models/user_profile.dart';
 
@@ -42,19 +43,7 @@ final dummyProducts = [
   ),
 ];
 
-class CartItem {
-  final Product product;
-  final int quantity;
-  final Color selectedColor;
-  final String selectedSize;
 
-  CartItem({
-    required this.product,
-    required this.quantity,
-    required this.selectedColor,
-    required this.selectedSize,
-  });
-}
 
 final dummyCart = [
   CartItem(

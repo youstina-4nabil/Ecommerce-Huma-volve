@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class Product {
+class Product extends Equatable {
   final String id;
   final String name;
   final String description;
@@ -10,7 +11,7 @@ class Product {
   final List<String> sizes;
   final int? categoryId;
 
-  Product({
+  const Product({
     required this.id,
     required this.name,
     required this.description,
@@ -21,7 +22,6 @@ class Product {
     this.categoryId,
   });
 
-  // الـ API مش بيرجّع colors/sizes، فبنحط قيم افتراضية
   factory Product.fromJson(Map<String, dynamic> json) {
     final images = (json['images'] as List?) ?? [];
     final firstImage =
@@ -39,7 +39,9 @@ class Product {
     );
   }
 
-  // بعض صور الـ API بترجع بالشكل ["https://..."] فبنشيل الأقواس والعلامات
   static String _cleanUrl(String url) =>
       url.replaceAll(RegExp(r'[\[\]"]'), '').trim();
+
+  @override
+  List<Object?> get props => [id, name, price, imageUrl];
 }

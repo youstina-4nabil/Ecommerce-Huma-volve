@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../dummy_data.dart';
+import '../../../models/cart_item.dart';
 import '../../../models/product.dart';
 import '../../../theme.dart';
 import '../../../widgets/primary_button.dart';
+import '../../cart/cubit/cart_cubit.dart';
 import '../widgets/color_selector.dart';
 import '../widgets/size_selector.dart';
 
@@ -161,13 +163,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     PrimaryButton(
                       text: 'Add to Cart',
                       onPressed: () {
+                        context.read<CartCubit>().addItem(
+                          CartItem(
+                            product: widget.product,
+                            quantity: 1,
+                            selectedColor: _selectedColor,
+                            selectedSize: _selectedSize,
+                          ),
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('${widget.product.name} added to cart'),
                             behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
                             backgroundColor: AppTheme.primary,
                           ),
                         );

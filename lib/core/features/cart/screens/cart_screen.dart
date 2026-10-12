@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../dummy_data.dart';
+
+import '../../../models/cart_item.dart';
 import '../../../theme.dart';
-import '../../../widgets/primary_button.dart';
+
+import '../cubit/cart_cubit.dart';
 import '../widgets/cart_item_card.dart';
 
 class CartScreen extends StatelessWidget {
@@ -10,103 +13,37 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double subtotal = dummyCart.fold(0, (sum, item) => sum + (item.product.price * item.quantity));
-    double tax = subtotal * 0.1;
-    double total = subtotal + tax;
-
     return Scaffold(
       backgroundColor: AppTheme.background,
-      appBar: AppBar(
-        title: const Text('My Cart'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              itemCount: dummyCart.length,
-              itemBuilder: (context, index) {
-                return CartItemCard(cartItem: dummyCart[index]);
-              },
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  spreadRadius: 2,
-                  blurRadius: 20,
-                  offset: const Offset(0, -10),
+      appBar: AppBar(title: const Text('My Cart'), centerTitle: true),
+      body: BlocBuilder<CartCubit, List<CartItem>>(
+        builder: (context, items) {
+          if (items.isEmpty) {
+            return const Center(child: Text('Your cart is empty'));
+          }
+          final cubit = context.read<CartCubit>();
+          final subtotal = cubit.subtotal;
+          final tax = cubit.tax;
+          final total = cubit.total;
+
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  itemCount: items.length,
+                  itemBuilder: (context, index) => CartItemCard(
+                    cartItem: items[index],
+                    onIncrement: () => cubit.increment(index),
+                    onDecrement: () => cubit.decrement(index),
+                  ),
                 ),
-              ],
-            ),
-            child: SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Subtotal:', style: TextStyle(color: Colors.grey.shade600, fontSize: 16)),
-                      Text('\$${subtotal.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Tax (10%):', style: TextStyle(color: Colors.grey.shade600, fontSize: 16)),
-                      Text('\$${tax.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                    ],
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Divider(),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Total:',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '\$${total.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-                  PrimaryButton(
-                    text: 'Checkout',
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('Processing Checkout...'),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          backgroundColor: AppTheme.primary,
-                        ),
-                      );
-                    },
-                  ),
-                ],
               ),
-            ),
-          ),
-        ],
+              // ... نفس الـ bottom summary ...
+            ],
+          );
+        },
       ),
     );
   }
